@@ -1,30 +1,26 @@
 package Form;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.SystemColor;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.SystemColor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import Data.DB;
 import Utils.Art;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JScrollPane;
-import java.awt.GridLayout;
-
+import Utils.FavoriateAuction;
 public class Main {
 
 	public static JFrame frame;
@@ -55,6 +51,7 @@ public class Main {
 		frame.setBounds(100, 100, 814, 577);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setLocationRelativeTo(null);
 
 		JLabel searchButton = new JLabel();
 		searchButton.addMouseListener(new MouseAdapter() {
@@ -142,19 +139,14 @@ public class Main {
 		viewMap.setFont(new Font("굴림", Font.PLAIN, 18));
 
 		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setVisible(true);
 		scrollPane_1.setBounds(406, 343, 381, 185);
 		frame.getContentPane().add(scrollPane_1);
 
-		JPanel panel_1 = new JPanel();
-		scrollPane_1.setViewportView(panel_1);
-		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
-
-		JPanel favoriate = new JPanel();
-		favoriate.setBounds(407, 118, 380, 185);
-		createLabel(favoriate);
-		frame.getContentPane().add(favoriate);
-		favoriate.setLayout(new GridLayout(1, 0, 0, 0));
+		JPanel panel_1 = new JPanel(new GridLayout(0, 2, 10, 0));
 		
+		scrollPane_1.setViewportView(panel_1);
+
 		JLabel favoriateAuctionLabel = new JLabel("인기경매");
 		favoriateAuctionLabel.setFont(new Font("굴림", Font.PLAIN, 15));
 		favoriateAuctionLabel.setBounds(407, 88, 64, 20);
@@ -164,21 +156,50 @@ public class Main {
 		saleList.setFont(new Font("굴림", Font.PLAIN, 15));
 		saleList.setBounds(407, 313, 96, 20);
 		frame.getContentPane().add(saleList);
-	}
 
-	public static JPanel createLabel(JPanel panel) {
-	    List<String> list = new ArrayList<String>();
-	    list.addAll(DB.getAllData("b_name", "building"));
-	    
-	    for (String sort : list) {
-	        for (int i = 1; i <= 3; i++) {
-	            JLabel label = new JLabel();
-	            ImageIcon imgIcon = new ImageIcon("G:\\내 드라이브\\대회\\정보기술 공개과제\\제3과제\\datafiles\\building\\" + sort + i + ".jpg");
-	            label.setIcon(imageIconSetSize(imgIcon, panel.getWidth(), (int) (panel.getHeight() * 0.7)));
-	            panel.add(label);
-	        }
-	    }
-	    return panel;
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(407, 107, 380, 196);
+		frame.getContentPane().add(scrollPane);
+
+		JPanel panel_2 = new JPanel(new GridLayout(1, 5, 10, 0));
+		List<String> list = DB.getFiveBuilding();
+        for (String array: list) {
+        	String b_price = DB.getData("b_price", "b_no", array, "building");
+        	String b_name = DB.getData("b_name", "b_no", array, "building");
+        	String b_count = DB.getData("b_count", "b_no", array, "building");
+        	String a_no = DB.getData("a_no", "b_no", array, "building");
+        	String ar_name = DB.getData("ar_name", "ar_no", a_no, "area");
+        	String a_date = DB.getData("a_date", "a_no", a_no, "auction");
+        	
+        	int resultPrice = 0;
+        	int gamJeongGa = 0;
+        	//유찰횟수 (감정가) 판별 / 0 : 100% +1 : -10%
+        	if (Integer.parseInt(b_count) == 0) {
+        		resultPrice = Integer.parseInt(b_price);
+        		gamJeongGa = 100;
+        	} else {
+        		resultPrice = Integer.parseInt(b_price) / (Integer.parseInt(b_count) * 10);
+        		gamJeongGa = (Integer.parseInt(b_count) * 10);
+        	}
+        	
+        	//750000000 -> 7억 5000만원 변경
+        	StringBuffer sb = new StringBuffer();
+        	if ((int) Math.log10(resultPrice) + 1 == 9) { //Math.log10이 0부터 세서 1추가 해서 비교하는 거임 (Math.log10 -> 숫자형 길이 셈)
+        		sb.append(String.valueOf(resultPrice).substring(0, 5) + "만원");
+        		sb.insert(1, "억");
+        	} else {
+        		sb.append(String.valueOf(resultPrice).substring(0, 4) + "만원");
+        	}
+        	
+        	ImageIcon icon1 = new ImageIcon("C:\\Users\\Leepl\\Desktop\\대회\\정보기술 공개과제\\제3과제\\datafiles\\building\\" + b_name + "1.jpg");
+        	panel_2.add(new FavoriateAuction(imageIconSetSize(icon1, 150, 80),
+        			"<html><font size = '+1'>" + sb + "</font>"
+        			+ "<br><font color='blue'>감정가 " + gamJeongGa + "%</font>"
+        			+ "<br>" + ar_name
+        			+ "<br>경매일:" + a_date + "<html/>"));
+        	sb.delete(0, 10);
+        }
+		scrollPane.setViewportView(panel_2);
 	}
 
 	public static ImageIcon imageIconSetSize(ImageIcon icon, int x, int y) {
@@ -186,5 +207,10 @@ public class Main {
 		Image yimage = ximage.getScaledInstance(x, y, java.awt.Image.SCALE_SMOOTH);
 		ImageIcon image = new ImageIcon(yimage);
 		return image;
+	}
+	
+	public static JPanel createAcutionPanel() {
+		JPanel panel = new JPanel();
+		return panel;
 	}
 }

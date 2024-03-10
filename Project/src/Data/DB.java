@@ -26,6 +26,32 @@ public class DB {
 			e.printStackTrace();
 		}
 	}
+	
+	public static String getInterestPeoples(String buildingNum) {
+		String save = "";
+		try {
+			st.executeUpdate("use auction");
+			ResultSet rs = st.executeQuery("SELECT count(*) FROM interest WHERE b_no = '" + buildingNum + "'");
+			if (rs.next()) save = Integer.toString(rs.getInt(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return save;
+	}
+	
+	public static List<String> getFiveBuilding() {
+		List<String> save = new ArrayList<>();
+		try {
+			st.executeUpdate("USE auction");
+			ResultSet rs = st.executeQuery("SELECT b_no, COUNT(*) AS count FROM interest GROUP BY b_no ORDER BY count DESC LIMIT 5");
+			while (rs.next()) {
+				save.add(rs.getString("b_no"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return save;
+	}
 
 	public static String getData(String wantColumn, String getColumn, String where, String table) {
 		String save = "";
@@ -68,6 +94,9 @@ public class DB {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getAllData("u_id", "user"));
+		List<String> list = DB.getFiveBuilding();
+		for (String array : list) {
+			System.out.println(DB.getData("b_name", "b_no", array, "building"));
+		}
 	}
 }
