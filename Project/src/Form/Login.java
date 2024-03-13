@@ -19,12 +19,9 @@ import java.awt.event.ActionEvent;
 public class Login {
 
 	private JFrame frame;
-	private JTextField id_textField;
-	private JTextField pw_textField;
+	public static JTextField id_textField;
+	public static JTextField pw_textField;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -42,16 +39,10 @@ public class Login {
 		return frame;
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public Login() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 472, 242);
@@ -72,15 +63,15 @@ public class Login {
 		JButton loginButton = new JButton("로그인");
 		loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String getId = DB.getData("u_id", "u_id", "'" + id_textField.getText() + "'", "user");
-				String getPw = DB.getData("u_pw", "u_id", "'" + id_textField.getText() + "'", "user");
+				String getId = DB.getData("u_id", "u_id", id_textField.getText(), "user");
+				String getPw = DB.getData("u_pw", "u_id", id_textField.getText(), "user");
 				if (id_textField.getText().isEmpty() || pw_textField.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "입력하지 않은 항목이 있습니다.", "경고", JOptionPane.ERROR_MESSAGE);
 				} else if (id_textField.getText().equals("admin") && pw_textField.getText().equals("1234")) {
 					JOptionPane.showMessageDialog(null, "관리자님 환영합니다.", "정보", JOptionPane.INFORMATION_MESSAGE);
 					frame.dispose();
-					Main main = new Main();
-					main.getMain().setVisible(true);
+					Admin admin = new Admin();
+					admin.getFrame().setVisible(true);
 				} else if (getId.equals(id_textField.getText()) && getPw.equals(pw_textField.getText())) {
 					JOptionPane.showMessageDialog(null, "환영합니다.", "정보", JOptionPane.INFORMATION_MESSAGE);
 					frame.dispose();

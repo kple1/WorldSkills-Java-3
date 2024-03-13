@@ -5,26 +5,35 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.SystemColor;
+import java.awt.Window;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-import Utils.Art;
+import Data.DB;
+
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class BuildingInfo {
 
 	private JFrame frame;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					BuildingInfo window = new BuildingInfo();
+					BuildingInfo window = new BuildingInfo(null, null, null, null, null, null, null, null);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,27 +46,29 @@ public class BuildingInfo {
 	public JFrame getBuildingInfo() {
 		return frame;
 	}
-	/**
-	 * Create the application.
-	 */
-	public BuildingInfo() {
+	
+	String resultPrice;
+	String price;
+	String auctionDay;
+	String denyAuction;
+	String favoriatePeoples;
+	public static String buildingName;
+	String location;
+	String type;
+	
+	public BuildingInfo(String resultPrice, String price, String auctionDay, String denyAuction, String favoriatePeoples, String buildingName, String location, String type) {
+		this.resultPrice = resultPrice;
+		this.price = price;
+		this.auctionDay = auctionDay;
+		this.denyAuction = denyAuction;
+		this.favoriatePeoples = favoriatePeoples;
+		this.buildingName = buildingName;
+		this.location = location;
+		this.type = type;
 		initialize();
 	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	
-	public JLabel resultPrice;
-	public JLabel price;
-	public JLabel auctionDay;
-	public JLabel denyAuction;
-	public JLabel favoriatePeoples;
-	public JPanel imagePanel;
-	public JLabel buildingName;
-	public JLabel location;
-	public JLabel type;
-	
+	int count = 1;
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("빌딩 정보");
@@ -66,19 +77,15 @@ public class BuildingInfo {
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
 		
-		imagePanel = new JPanel();
-		imagePanel.setBounds(12, 10, 239, 274);
-		frame.getContentPane().add(imagePanel);
-		
-		buildingName = new JLabel("a");
+		JLabel buildingName = new JLabel(this.buildingName);
 		buildingName.setBounds(263, 79, 268, 15);
 		frame.getContentPane().add(buildingName);
 		
-		location = new JLabel("a");
+		JLabel location = new JLabel(this.location);
 		location.setBounds(263, 135, 268, 15);
 		frame.getContentPane().add(location);
 		
-		type = new JLabel("a");
+		JLabel type = new JLabel(this.type);
 		type.setBounds(263, 193, 268, 15);
 		frame.getContentPane().add(type);
 		
@@ -113,38 +120,155 @@ public class BuildingInfo {
 		frame.getContentPane().add(panel_1);
 		
 		JButton btnNewButton = new JButton("관심 건물");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String getUserNo = DB.getData("u_no", "u_id", Login.id_textField.getText(), "user");
+				List<String> list = DB.getManyData("b_no", "interest", "u_no", getUserNo);
+				String b_no = DB.getData("b_no", "b_name", BuildingInfo.buildingName, "building");
+				
+				int count = 0;
+				for (String array: list) {
+					String getBuildingNum = DB.getData("b_name", "b_no", array, "building");
+					if (BuildingInfo.buildingName.equals(getBuildingNum)) {
+						JOptionPane.showMessageDialog(null, "이미 관심 목록에 등록되었습니다.", "정보", JOptionPane.INFORMATION_MESSAGE);
+						++count;
+						break;
+					}
+				}
+				
+				if (count == 0) {
+					DB.insertInterest(getUserNo, b_no);
+					JOptionPane.showMessageDialog(null, "관심 목록에 추가되었습니다.", "정보", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
 		btnNewButton.setBackground(SystemColor.activeCaption);
 		btnNewButton.setBounds(12, 541, 247, 34);
 		frame.getContentPane().add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("매각하기");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String b_no = DB.getData("b_no", "b_name", BuildingInfo.buildingName, "building");
+				String b_date = DB.getData("b_date", "b_name", BuildingInfo.buildingName, "building");
+				String b_name = DB.getData("b_name", "b_name", BuildingInfo.buildingName, "building");
+				String b_price = DB.getData("b_price", "b_name", BuildingInfo.buildingName, "building");
+				int b_type = DB.getIntData("b_type", "building", "b_no", b_no);
+				
+				String buildingType = "";
+				if (b_type == 0) {
+					buildingType = "아파트";
+				} else if (b_type == 1) {
+					buildingType = "주택";
+				} else if (b_type == 2) {
+					buildingType = "오피스텔";
+				}
+				
+				HugeMap hm = new HugeMap(0, 0);
+				hm.getHegeMap().setVisible(false);
+				
+				for(Window window : Window.getWindows()) {
+				    window.dispose();
+				}
+				
+				StringBuffer sb = new StringBuffer();
+				sb.append(b_price);
+				if ((int) Math.log10(Integer.parseInt(b_price)) + 1 == 9) {
+					sb.insert(3, ",");
+					sb.insert(7, ",");
+				} else {
+					sb.insert(2, ",");
+					sb.insert(5, ",");
+				}
+				
+				myHome myhome = new myHome(b_date, b_name, String.valueOf(sb), buildingType);
+				myhome.getMyHome().setVisible(true);
+				
+				DB.delete("interest", "b_no", b_no);
+				
+				JOptionPane.showMessageDialog(null, "매각이 완료되었습니다.", "정보", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
 		btnNewButton_1.setBackground(SystemColor.activeCaption);
 		btnNewButton_1.setBounds(271, 541, 260, 34);
 		frame.getContentPane().add(btnNewButton_1);
 		
-		resultPrice = new JLabel("New label");
+		JLabel resultPrice = new JLabel(this.resultPrice);
 		resultPrice.setHorizontalAlignment(SwingConstants.RIGHT);
 		resultPrice.setBounds(248, 306, 283, 20);
 		frame.getContentPane().add(resultPrice);
 		
-		price = new JLabel("New label");
+		JLabel price = new JLabel(this.price);
 		price.setHorizontalAlignment(SwingConstants.RIGHT);
 		price.setBounds(248, 355, 283, 15);
 		frame.getContentPane().add(price);
 		
-		denyAuction = new JLabel("New label");
+		JLabel denyAuction = new JLabel(this.denyAuction);
 		denyAuction.setHorizontalAlignment(SwingConstants.RIGHT);
 		denyAuction.setBounds(248, 406, 283, 15);
 		frame.getContentPane().add(denyAuction);
 		
-		auctionDay = new JLabel("New label");
+		JLabel auctionDay = new JLabel(this.auctionDay);
 		auctionDay.setHorizontalAlignment(SwingConstants.RIGHT);
 		auctionDay.setBounds(248, 454, 283, 15);
 		frame.getContentPane().add(auctionDay);
 		
-		favoriatePeoples = new JLabel("New label");
+		JLabel favoriatePeoples = new JLabel(this.favoriatePeoples);
 		favoriatePeoples.setHorizontalAlignment(SwingConstants.RIGHT);
 		favoriatePeoples.setBounds(248, 504, 283, 15);
 		frame.getContentPane().add(favoriatePeoples);
+		
+		JLayeredPane imagePanel = new JLayeredPane();
+		imagePanel.setBounds(12, 10, 239, 274);
+		frame.getContentPane().add(imagePanel);
+
+		ImageIcon icon = new ImageIcon("datafiles/building/" + BuildingInfo.buildingName + count + ".jpg");
+		JLabel label = new JLabel(icon);
+		
+		JLabel leftButton = new JLabel("<");
+		leftButton.setHorizontalAlignment(SwingConstants.LEFT);
+		leftButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (count == 1) {
+					count = 3;
+				} else {
+					count -= 1;
+				}
+				ImageIcon icon = new ImageIcon("datafiles/building/" + BuildingInfo.buildingName + count + ".jpg");
+				label.setIcon(Main.imageIconSetSize(icon, 239, 274));
+				imagePanel.revalidate();
+				imagePanel.repaint();
+			}
+		});
+		
+		leftButton.setFont(new Font("굴림", Font.BOLD, 17));
+		leftButton.setForeground(SystemColor.desktop);
+		leftButton.setBounds(12, 130, 20, 15);
+		imagePanel.add(leftButton);
+		
+		JLabel rightButton = new JLabel(">");
+		rightButton.setHorizontalAlignment(SwingConstants.RIGHT);
+		rightButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (count == 3) {
+					count = 1;
+				} else {
+					count += 1;
+				}
+				ImageIcon icon = new ImageIcon("datafiles/building/" + BuildingInfo.buildingName + count + ".jpg");
+				label.setIcon(Main.imageIconSetSize(icon, 239, 274));
+				imagePanel.revalidate();
+				imagePanel.repaint();
+			}
+		});
+		rightButton.setFont(new Font("굴림", Font.BOLD, 17));
+		rightButton.setForeground(SystemColor.desktop);
+		rightButton.setBounds(207, 130, 20, 15);
+		imagePanel.add(rightButton);
+		
+		label.setBounds(0, 0, 239, 274);
+		imagePanel.add(label);
 	}
 }

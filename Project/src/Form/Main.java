@@ -62,7 +62,7 @@ public class Main {
 				s.getSearch().setVisible(true);
 			}
 		});
-		ImageIcon imgIcon1 = new ImageIcon("G:\\내 드라이브\\대회\\정보기술 공개과제\\제3과제\\datafiles\\image\\검색.png");
+		ImageIcon imgIcon1 = new ImageIcon("datafiles\\image\\검색.png");
 		searchButton.setIcon(imageIconSetSize(imgIcon1, 40, 40));
 		searchButton.setBounds(631, 10, 40, 40);
 		frame.getContentPane().add(searchButton);
@@ -72,11 +72,11 @@ public class Main {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				frame.dispose();
-				myHome mh = new myHome();
+				myHome mh = new myHome(null, null, null, null);
 				mh.getMyHome().setVisible(true);
 			}
 		});
-		ImageIcon imgIcon2 = new ImageIcon("G:\\내 드라이브\\대회\\정보기술 공개과제\\제3과제\\datafiles\\image\\마이홈.png");
+		ImageIcon imgIcon2 = new ImageIcon("datafiles\\image\\마이홈.png");
 		myHomeButton.setIcon(imageIconSetSize(imgIcon2, 40, 40));
 		myHomeButton.setBounds(683, 10, 40, 40);
 		frame.getContentPane().add(myHomeButton);
@@ -86,11 +86,11 @@ public class Main {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				frame.dispose();
-				auction a = new auction();
+				Auction a = new Auction();
 				a.getAuction().setVisible(true);
 			}
 		});
-		ImageIcon imgIcon3 = new ImageIcon("G:\\내 드라이브\\대회\\정보기술 공개과제\\제3과제\\datafiles\\image\\경매일정.png");
+		ImageIcon imgIcon3 = new ImageIcon("datafiles\\image\\경매일정.png");
 		auctionButton.setIcon(imageIconSetSize(imgIcon3, 40, 40));
 		auctionButton.setBounds(747, 10, 40, 40);
 		frame.getContentPane().add(auctionButton);
@@ -131,7 +131,7 @@ public class Main {
 		panel.setBounds(0, 0, 800, 78);
 		frame.getContentPane().add(panel);
 
-		JPanel mapPanel = new Art("G:\\내 드라이브\\대회\\정보기술 공개과제\\제3과제\\datafiles\\map\\전체.jpg");
+		JPanel mapPanel = new Art("datafiles\\map\\전체.jpg");
 		mapPanel.setBounds(10, 88, 385, 442);
 		frame.getContentPane().add(mapPanel);
 		JButton viewMap = new JButton("지도 보기");
@@ -170,6 +170,18 @@ public class Main {
         	String a_no = DB.getData("a_no", "b_no", array, "building");
         	String ar_name = DB.getData("ar_name", "ar_no", a_no, "area");
         	String a_date = DB.getData("a_date", "a_no", a_no, "auction");
+        	int b_x = DB.getIntData("b_x", "building", "b_no", array);
+        	int b_y = DB.getIntData("b_y", "building", "b_no", array);
+        	int getType = DB.getIntData("b_type", "building", "b_no", array);
+        	
+        	String buildingType = "";
+        	if (getType == 0) {
+        		buildingType = "아파트";
+        	} else if (getType == 1) {
+        		buildingType = "주택";
+        	} else if (getType == 2) {
+        		buildingType = "오피스텔";
+        	}
         	
         	int resultPrice = 0;
         	int gamJeongGa = 0;
@@ -191,13 +203,12 @@ public class Main {
         		sb.append(String.valueOf(resultPrice).substring(0, 4) + "만원");
         	}
         	
-        	ImageIcon icon1 = new ImageIcon("C:\\Users\\Leepl\\Desktop\\대회\\정보기술 공개과제\\제3과제\\datafiles\\building\\" + b_name + "1.jpg");
+        	ImageIcon icon1 = new ImageIcon("datafiles\\building\\" + b_name + "1.jpg");
         	panel_2.add(new FavoriateAuction(imageIconSetSize(icon1, 150, 80),
         			"<html><font size = '+1'>" + sb + "</font>"
         			+ "<br><font color='blue'>감정가 " + gamJeongGa + "%</font>"
         			+ "<br>" + ar_name
-        			+ "<br>경매일:" + a_date + "<html/>"));
-        	sb.delete(0, 10);
+        			+ "<br>경매일:" + a_date + "<html/>", b_x, b_y, sb, gamJeongGa, a_date, a_no, array, b_name, ar_name, buildingType, frame));
         }
 		scrollPane.setViewportView(panel_2);
 	}
