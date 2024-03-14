@@ -10,12 +10,15 @@ import java.awt.Font;
 import javax.swing.JTextField;
 
 import Data.DB;
+import Utils.ChangeLogo;
 
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import javax.swing.JComboBox;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.regex.Pattern;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -64,9 +67,18 @@ public class Register {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 493, 558);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(frame);
+		new ChangeLogo(frame);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	frame.dispose();
+            	Login login = new Login();
+            	login.getLogin().setVisible(true);
+            }
+        });
 		
 		JLabel lblNewLabel = new JLabel("회원가입");
 		lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 30));

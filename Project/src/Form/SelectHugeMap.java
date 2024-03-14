@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import Utils.ChangeLogo;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -46,11 +49,12 @@ public class SelectHugeMap {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("지도");
 		frame.setBounds(100, 100, 918, 1020);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
-		
+		new ChangeLogo(frame);
 		JPanel panel = new JPanel();
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -61,7 +65,7 @@ public class SelectHugeMap {
 			}
 		});
 		panel.setBounds(0, 0, 900, 1000);
-		ImageIcon icon = new ImageIcon("datafiles/map/전체.jpg");
+		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\map\\전체.jpg");
 		JLabel label = new JLabel(Main.imageIconSetSize(icon, 900, 1000));
 		panel.add(label);
 		frame.getContentPane().add(panel);

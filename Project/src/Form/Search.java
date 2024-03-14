@@ -7,6 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import Data.DB;
+import Utils.ChangeLogo;
 import Utils.SearchFormPlugin;
 
 import javax.swing.JLabel;
@@ -16,6 +17,8 @@ import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -53,11 +56,20 @@ public class Search {
 
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("검색");
 		frame.setBounds(100, 100, 770, 588);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	frame.dispose();
+            	Main main = new Main();
+            	main.getMain().setVisible(true);
+            }
+        });
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
-
+		new ChangeLogo(frame);
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBounds(12, 10, 98, 23);
 		comboBox.addItem("건물명 검색");
@@ -111,7 +123,7 @@ public class Search {
 				}
 			}
 		});
-		ImageIcon icon = new ImageIcon("datafiles/image/검색.png");
+		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\image\\검색.png");
 		searchButton.setIcon(Main.imageIconSetSize(icon, 29, 29));
 		searchButton.setBounds(615, 8, 29, 29);
 

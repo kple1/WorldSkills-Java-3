@@ -9,6 +9,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JTable;
@@ -17,6 +19,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import Data.DB;
+import Utils.ChangeLogo;
 import Utils.ImageRender;
 
 public class myHome {
@@ -58,9 +61,18 @@ public class myHome {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 535, 585);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
+		new ChangeLogo(frame);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	frame.dispose();
+            	Main main = new Main();
+            	main.getMain().setVisible(true);
+            }
+        });
 
 		JLabel lblNewLabel = new JLabel("나의 관심목록");
 		lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 15));
@@ -140,7 +152,7 @@ public class myHome {
 			} else {
 				buildingType = "오피스텔";
 			}
-			ImageIcon icon = new ImageIcon("datafiles/building/" + b_name + "1.jpg");
+			ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + b_name + "1.jpg");
 			model2.addRow(new Object[] { ++count2, Main.imageIconSetSize(icon, 50, 50), b_name, buildingType, a_date });
 		}
 

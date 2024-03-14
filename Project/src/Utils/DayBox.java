@@ -1,26 +1,26 @@
 package Utils;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.SystemColor;
 
 public class DayBox extends JPanel {
 
-	public DayBox(int day, String resultAuction) {
-		setLayout(null);
-		
-		JLabel dayLabel = new JLabel(String.valueOf(day));
-		dayLabel.setOpaque(true);
-		dayLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		dayLabel.setBackground(SystemColor.activeCaption);
-		dayLabel.setBounds(0, 0, 86, 19);
-		add(dayLabel);
-		
-		JLabel auctionCount = new JLabel(resultAuction);
-		auctionCount.setHorizontalAlignment(SwingConstants.CENTER);
-		auctionCount.setBounds(0, 25, 86, 19);
-		add(auctionCount);
-		
+	public DayBox(int day, String resultAuction, Color color) {
+        setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        setLayout(new BorderLayout());
+
+        JLabel topLabel = new JLabel(String.valueOf(day), SwingConstants.RIGHT);
+        topLabel.setOpaque(true);
+        topLabel.setBackground(color);
+        JLabel bottomLabel = new JLabel(resultAuction, SwingConstants.LEFT);
+
+        add(topLabel, BorderLayout.NORTH);
+        add(bottomLabel, BorderLayout.SOUTH); 
 	}
 }

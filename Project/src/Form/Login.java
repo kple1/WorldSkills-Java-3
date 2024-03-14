@@ -7,11 +7,17 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
+
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 import Data.DB;
+import Utils.ChangeLogo;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -49,6 +55,9 @@ public class Login {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(frame);
+		frame.setTitle("로그인");
+		
+		new ChangeLogo(frame);
 		
 		JLabel id_Label = new JLabel("아이디");
 		id_Label.setFont(new Font("굴림", Font.PLAIN, 20));

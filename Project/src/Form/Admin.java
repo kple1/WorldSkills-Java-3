@@ -7,9 +7,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.SystemColor;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import javax.swing.Timer;
+
+import Utils.ChangeLogo;
+
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
 public class Admin {
 
@@ -37,18 +44,21 @@ public class Admin {
 	public JFrame getFrame() {
 		return frame;
 	}
-	
+
 	public Admin() {
 		initialize();
 	}
 
 	private void initialize() {
 		frame = new JFrame();
+		frame.setIconImage(
+				Toolkit.getDefaultToolkit().getImage("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\icon\\icon1.png"));
 		frame.setTitle("관리자");
 		frame.setBounds(100, 100, 280, 220);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		
+		frame.setLocationRelativeTo(null);
+
 		JButton auctionRegist = new JButton("경매 등록");
 		auctionRegist.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -57,11 +67,14 @@ public class Admin {
 				frame.dispose();
 			}
 		});
+
+		new ChangeLogo(frame);
+
 		auctionRegist.setForeground(SystemColor.window);
 		auctionRegist.setBackground(SystemColor.desktop);
 		auctionRegist.setBounds(29, 25, 211, 34);
 		frame.getContentPane().add(auctionRegist);
-		
+
 		JButton userManage = new JButton("회원관리");
 		userManage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -74,7 +87,7 @@ public class Admin {
 		userManage.setBackground(SystemColor.desktop);
 		userManage.setBounds(29, 69, 211, 34);
 		frame.getContentPane().add(userManage);
-		
+
 		JButton logout = new JButton("로그아웃");
 		logout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

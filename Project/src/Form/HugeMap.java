@@ -1,11 +1,14 @@
 package Form;
 
 import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import Utils.ChangeLogo;
 import Utils.RedCircle;
 
 import javax.swing.JLayeredPane;
@@ -43,7 +46,18 @@ public class HugeMap {
 		frame = new JFrame();
 		frame.setTitle("지도");
 		frame.setBounds(100, 100, 918, 1020);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		new ChangeLogo(frame);
+		
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	frame.dispose();
+            	Main main = new Main();
+            	main.getMain().setVisible(true);
+            }
+        });
 		frame.getContentPane().setLayout(null);
 		
 		JLayeredPane layeredPane = new JLayeredPane();
@@ -56,7 +70,7 @@ public class HugeMap {
 		rc.setOpaque(false);
 		layeredPane.add(rc);
 		
-		ImageIcon image = new ImageIcon("datafiles/map/전체.jpg");
+		ImageIcon image = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\map\\전체.jpg");
 		JLabel map = new JLabel(Main.imageIconSetSize(image, 900, 1000));
 		map.setBounds(0, 0, 900, 1000);
 		layeredPane.add(map);

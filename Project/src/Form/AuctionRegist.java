@@ -10,12 +10,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
+import Utils.ChangeLogo;
 import Utils.Square;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -53,26 +56,23 @@ public class AuctionRegist {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public AuctionRegist() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	boolean selectedPanel1 = false;
 	boolean selectedPanel2 = false;
 	boolean selectedPanel3 = false;
 	private void initialize() {
 		frame = new JFrame();
+		frame.setTitle("경매 등록");
 		frame.setBounds(100, 100, 548, 420);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().add(new Square(12, 10));
+		
+		new ChangeLogo(frame);
 		
 		JLabel lblNewLabel = new JLabel("건물명");
 		lblNewLabel.setBounds(12, 172, 57, 15);

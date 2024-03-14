@@ -127,7 +127,7 @@ public class SearchFormPlugin extends JPanel {
 		lblNewLabel.setBounds(263, 96, 57, 15);
 		panel.add(lblNewLabel);
 		
-		ImageIcon icon = new ImageIcon("datafiles/building/" + buildingName + "1.jpg");
+		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + buildingName + "1.jpg");
 		JLabel label = new JLabel(Main.imageIconSetSize(icon, 101, 101));
 		label.setBounds(0,0,101,101); //꼭 해주기 꼭 해주기 꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기꼭 해주기 꼭 해주기
 		layeredPane.add(label);

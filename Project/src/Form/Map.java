@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JScrollPane;
@@ -18,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Data.DB;
 import Utils.BlueCircle;
+import Utils.ChangeLogo;
 import Utils.RedCircle;
 
 import java.awt.Color;
@@ -60,7 +63,17 @@ public class Map {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 940, 1000);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		new ChangeLogo(frame);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	frame.dispose();
+            	Main main = new Main();
+            	main.getMain().setVisible(true);
+            }
+        });
+        
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
 
@@ -139,7 +152,7 @@ public class Map {
 		layeredPane.setPreferredSize(new Dimension(900, 1000)); // 패널 크기 설정 필수
 
 		scrollPane_1.setViewportView(layeredPane);
-		ImageIcon icon = new ImageIcon("datafiles/map/전체.jpg");
+		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\map\\전체.jpg");
 		JLabel label1 = new JLabel(Main.imageIconSetSize(icon, 900, 1000));
 		label1.setBounds(0, 0, 900, 1000);
 

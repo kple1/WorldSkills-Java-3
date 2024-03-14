@@ -7,13 +7,16 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.Window;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 import Data.DB;
+import Utils.ChangeLogo;
 
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
@@ -21,6 +24,8 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -55,7 +60,7 @@ public class BuildingInfo {
 	public static String buildingName;
 	String location;
 	String type;
-	
+
 	public BuildingInfo(String resultPrice, String price, String auctionDay, String denyAuction, String favoriatePeoples, String buildingName, String location, String type) {
 		this.resultPrice = resultPrice;
 		this.price = price;
@@ -73,11 +78,23 @@ public class BuildingInfo {
 		frame = new JFrame();
 		frame.setTitle("빌딩 정보");
 		frame.setBounds(100, 100, 559, 624);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+		new ChangeLogo(frame);
+		
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+            	frame.dispose();
+            	Main main = new Main();
+            	main.getMain().setVisible(true);
+            }
+        });
+        
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
 		
-		JLabel buildingName = new JLabel(this.buildingName);
+		JLabel buildingName = new JLabel(BuildingInfo.buildingName);
 		buildingName.setBounds(263, 79, 268, 15);
 		frame.getContentPane().add(buildingName);
 		
@@ -222,7 +239,7 @@ public class BuildingInfo {
 		imagePanel.setBounds(12, 10, 239, 274);
 		frame.getContentPane().add(imagePanel);
 
-		ImageIcon icon = new ImageIcon("datafiles/building/" + BuildingInfo.buildingName + count + ".jpg");
+		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + BuildingInfo.buildingName + count + ".jpg");
 		JLabel label = new JLabel(icon);
 		
 		JLabel leftButton = new JLabel("<");
@@ -235,7 +252,7 @@ public class BuildingInfo {
 				} else {
 					count -= 1;
 				}
-				ImageIcon icon = new ImageIcon("datafiles/building/" + BuildingInfo.buildingName + count + ".jpg");
+				ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + BuildingInfo.buildingName + count + ".jpg");
 				label.setIcon(Main.imageIconSetSize(icon, 239, 274));
 				imagePanel.revalidate();
 				imagePanel.repaint();
@@ -257,7 +274,7 @@ public class BuildingInfo {
 				} else {
 					count += 1;
 				}
-				ImageIcon icon = new ImageIcon("datafiles/building/" + BuildingInfo.buildingName + count + ".jpg");
+				ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + BuildingInfo.buildingName + count + ".jpg");
 				label.setIcon(Main.imageIconSetSize(icon, 239, 274));
 				imagePanel.revalidate();
 				imagePanel.repaint();

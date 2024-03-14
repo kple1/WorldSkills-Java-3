@@ -77,6 +77,59 @@ public class DB {
 		}
 		return save;
 	}
+	
+	public static List<String> getDayAuctionCount() {
+		List<String> save = new ArrayList<>();
+		try {
+			st.executeUpdate("USE auction");
+			ResultSet rs = st.executeQuery(
+					"SELECT COUNT(b_date) AS count FROM building GROUP BY b_date ORDER BY b_date");
+			while (rs.next()) {
+				save.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return save;
+	}
+	
+	public static List<String> getDayAuction() {
+		List<String> save = new ArrayList<>();
+		try {
+			st.executeUpdate("USE auction");
+			ResultSet rs = st.executeQuery("SELECT b_date FROM building GROUP BY b_date ORDER BY b_date");
+			while (rs.next()) {
+				save.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return save;
+	}
+	
+	public static String getMaxDate() {
+		String save = "";
+		try {
+			st.executeUpdate("USE auction");
+			ResultSet rs = st.executeQuery("SELECT MAX(b_date) FROM building");
+			if (rs.next()) save = rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return save;
+	}
+	
+	public static String getMinDate() {
+		String save = "";
+		try {
+			st.executeUpdate("USE auction");
+			ResultSet rs = st.executeQuery("SELECT MIN(b_date) FROM building");
+			if (rs.next()) save = rs.getString(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return save;
+	}
 
 	public static String getData(String wantColumn, String getColumn, String where, String table) {
 		String save = "";
@@ -160,11 +213,11 @@ public class DB {
 		}
 	}
 
-	//test bro huh huh
+
 	public static void main(String[] args) {
-		List<String> list = DB.getFiveBuilding();
-		for (String array : list) {
-			System.out.println(DB.getData("b_name", "b_no", array, "building"));
+		System.out.println(getDayAuctionCount());
+		for (String list: getDayAuction()) {
+			System.out.println(list);
 		}
 	}
 }
