@@ -195,14 +195,14 @@ public class BuildingInfo {
 					sb.insert(7, ",");
 				} else {
 					sb.insert(2, ",");
-					sb.insert(5, ",");
+					sb.insert(6, ",");
 				}
 				
-				myHome myhome = new myHome(b_date, b_name, String.valueOf(sb), buildingType);
-				myhome.getMyHome().setVisible(true);
-				
 				DB.delete("interest", "b_no", b_no);
+				DB.insertSaleAuction(Login.id_textField.getText(), b_name, b_date, b_price, buildingType);
 				
+				myHome myhome = new myHome();
+				myhome.getMyHome().setVisible(true);
 				JOptionPane.showMessageDialog(null, "매각이 완료되었습니다.", "정보", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});

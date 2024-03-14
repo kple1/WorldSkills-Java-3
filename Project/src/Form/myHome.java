@@ -27,7 +27,7 @@ public class myHome {
 	private JFrame frame;
 	private JTable myFavoriateList;
 	private JTable recentList;
-	private JTable slaeListTable;
+	private JTable saleListTable;
 
 	public JFrame getMyHome() {
 		return frame;
@@ -37,7 +37,7 @@ public class myHome {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					myHome window = new myHome(null, null, null, null);
+					myHome window = new myHome();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,16 +45,8 @@ public class myHome {
 			}
 		});
 	}
-	
-	String saleDay;
-	String buildingName;
-	String salePrice;
-	String buildingType;
-	public myHome(String saleDay, String buildingName, String salePrice, String buildingType) {
-		this.saleDay = saleDay;
-		this.buildingName = buildingName;
-		this.salePrice = salePrice;
-		this.buildingType = buildingType;
+
+	public myHome() {
 		initialize();
 	}
 
@@ -64,6 +56,7 @@ public class myHome {
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
+		frame.setTitle("마이홈");
 		new ChangeLogo(frame);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -188,21 +181,38 @@ public class myHome {
 		scrollPane_2.setBounds(12, 411, 495, 125);
 		frame.getContentPane().add(scrollPane_2);
 
-		slaeListTable = new JTable();
+		saleListTable = new JTable();
 		DefaultTableModel model3 = new DefaultTableModel(
 				new Object[][] {
-
+					
 				}, 
 				new String[] {
 						"\uB9E4\uAC01\uC77C", "\uAC74\uBB3C\uBA85", "\uB9E4\uAC01\uAE08\uC561", "\uC885\uB958" 
 				}
 			);
-		model3.addRow(new Object[]{saleDay, buildingName, salePrice, buildingType}); //추가 후
-		slaeListTable.setModel(model3); // 모델 설정
-		slaeListTable.getColumnModel().getColumn(0).setPreferredWidth(179);
-		slaeListTable.getColumnModel().getColumn(1).setPreferredWidth(142);
-		slaeListTable.getColumnModel().getColumn(2).setPreferredWidth(153);
-		slaeListTable.getColumnModel().getColumn(3).setPreferredWidth(148);
-		scrollPane_2.setViewportView(slaeListTable);
+		List<String> getNo = DB.getManyData("s_no", "saleauction", "u_id", Login.id_textField.getText());
+		if (getNo.size() != 0);
+		for (int i = 0; i < getNo.size(); i++) {
+			List<String> getDate = DB.getManyData("a_date", "saleauction", "u_id", Login.id_textField.getText());
+			List<String> getName = DB.getManyData("b_name", "saleauction", "u_id", Login.id_textField.getText());
+			List<String> getPrice = DB.getManyData("b_price", "saleauction", "u_id", Login.id_textField.getText());
+			List<String> getBuildingType = DB.getManyData("b_type", "saleauction", "u_id", Login.id_textField.getText());
+			StringBuffer sb = new StringBuffer();
+			sb.append(getPrice.get(i));
+			if ((int) Math.log10(Integer.parseInt(getPrice.get(i))) + 1 == 9) {
+				sb.insert(3, ",");
+				sb.insert(7, ",");
+			} else {
+				sb.insert(2, ",");
+				sb.insert(6, ",");
+			}
+			model3.addRow(new Object[]{getDate.get(i), getName.get(i), String.valueOf(sb), getBuildingType.get(i)}); //추가 후
+		}
+		saleListTable.setModel(model3); // 모델 설정
+		saleListTable.getColumnModel().getColumn(0).setPreferredWidth(179);
+		saleListTable.getColumnModel().getColumn(1).setPreferredWidth(142);
+		saleListTable.getColumnModel().getColumn(2).setPreferredWidth(153);
+		saleListTable.getColumnModel().getColumn(3).setPreferredWidth(148);
+		scrollPane_2.setViewportView(saleListTable);
 	}
 }

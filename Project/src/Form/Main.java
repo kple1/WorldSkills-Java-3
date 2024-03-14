@@ -24,6 +24,8 @@ import Data.DB;
 import Utils.Art;
 import Utils.ChangeLogo;
 import Utils.FavoriateAuction;
+import Utils.recentSaleList;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 public class Main {
@@ -86,7 +88,7 @@ public class Main {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				frame.dispose();
-				myHome mh = new myHome(null, null, null, null);
+				myHome mh = new myHome();
 				mh.getMyHome().setVisible(true);
 			}
 		});
@@ -165,7 +167,13 @@ public class Main {
 		frame.getContentPane().add(scrollPane_1);
 
 		JPanel panel_1 = new JPanel(new GridLayout(0, 2, 10, 0));
-		
+		List<String> s_no = DB.getAllData("s_no", "saleauction");
+		for (String list: s_no) {
+			String getPrice = DB.getData("b_price", "s_no", list, "saleauction");
+			String a_no = DB.getData("a_no", "b_price", getPrice, "building");
+			String getArea = DB.getData("ar_name", "ar_no", a_no, "area");
+			panel_1.add(new recentSaleList(getPrice, getArea, frame));
+		}
 		scrollPane_1.setViewportView(panel_1);
 
 		JLabel favoriateAuctionLabel = new JLabel("인기경매");

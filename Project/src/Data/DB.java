@@ -207,7 +207,22 @@ public class DB {
 			pstm.setString(1, id);
 			pstm.setString(2, pw);
 			pstm.setString(3, answer);
-			pstm.executeUpdate(); // executeUpdate() 메서드에 SQL 쿼리문을 전달하지 않음
+			pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void insertSaleAuction(String u_id, String b_name, String a_date, String b_price, String b_type) {
+		try {
+			String sql = "INSERT INTO saleauction (u_id, b_name, a_date, b_price, b_type) VALUES (?, ?, ?, ?, ?)";
+			PreparedStatement pstm = connection.prepareStatement(sql);
+			pstm.setString(1, u_id);
+			pstm.setString(2, b_name);
+			pstm.setString(3, a_date);
+			pstm.setString(4, b_price);
+			pstm.setString(5, b_type);
+			pstm.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
