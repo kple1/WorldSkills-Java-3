@@ -9,9 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Data.DB;
 import Utils.ChangeLogo;
 import Utils.Square;
 
@@ -20,9 +23,17 @@ import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -35,10 +46,9 @@ public class AuctionRegist {
 	private JTextField price;
 	public static JTextField X;
 	public static JTextField Y;
+	int type = 0;
+	int a_date = 0;
 
-	/**
-	 * Launch the application.
-	 */
 	public JFrame getFrame() {
 		return frame;
 	}
@@ -135,7 +145,11 @@ public class AuctionRegist {
 		JComboBox MonthComboBox = new JComboBox();
 		int getMonth = LocalDateTime.now().getMonthValue();
 		for (int i = 1; i <= 12; i++) {
-			MonthComboBox.addItem(i);
+			if ((int)Math.log10(i) + 1 == 1) {
+				MonthComboBox.addItem("0" + i);
+			} else {
+				MonthComboBox.addItem(i);
+			}
 		}
 		MonthComboBox.setSelectedItem(getMonth);
 		MonthComboBox.setBounds(260, 239, 90, 23);
@@ -204,22 +218,53 @@ public class AuctionRegist {
 		locationSettingButton.setBounds(279, 348, 121, 23);
 		frame.getContentPane().add(locationSettingButton);
 		
+		if (buildingTypeComboBox.getSelectedItem().equals("아파트")) {
+			type = 0;
+		} else if (buildingTypeComboBox.getSelectedItem().equals("주택")) {
+			type = 1;
+		} else if (buildingTypeComboBox.getSelectedItem().equals("오피스텔")) {
+			type = 2;
+		}
+		
+		for (int i = 0; i < 9; i++) {
+			if (locationComboBox.getSelectedItem().equals(list[i])) {
+				a_date = i + 1;
+			}	
+		}
+		
+		String date = yearComboBox.getSelectedItem() + "-" + MonthComboBox.getSelectedItem() + "-" + DayComboBox.getSelectedItem();
 		JButton endButton = new JButton("등록하기");
+		List<Path> imageList = new ArrayList<>();
+		List<String> fileList = new ArrayList<>();
+		JFileChooser fileDlg = new JFileChooser();
+		
 		endButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int getLengthOfPrice = (int) Math.log10(Integer.parseInt(price.getText())) + 1;
+				long getLP = (int) Math.log10(Long.parseLong(price.getText())) + 1;
 				if (!selectedPanel1 || !selectedPanel2 || !selectedPanel3) {
 					JOptionPane.showMessageDialog(null, "이미지를 모두 선택해주세요.", "경고", JOptionPane.ERROR_MESSAGE);
 				} else if (buildingName.getText().isEmpty() || price.getText().isEmpty() || X.getText().isEmpty() || Y.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "입력하지 않은 항목이 있습니다.", "경고", JOptionPane.ERROR_MESSAGE);
 				} else if (Pattern.matches("", price.getText())) {
 					JOptionPane.showMessageDialog(null, "가격은 0이 아닌 숫자만 입력 가능합니다.", "경고", JOptionPane.ERROR_MESSAGE);
-				} else if (getLengthOfPrice != 7 || getLengthOfPrice != 8 || getLengthOfPrice != 9 || getLengthOfPrice != 10 || getLengthOfPrice != 11 || getLengthOfPrice != 12) {
+				} else if (getLP < 7 && getLP > 12) {
 					JOptionPane.showMessageDialog(null, "가격은 최소 백만원 단위, 최대 천억 단위까지 입력 가능합니다.", "경고", JOptionPane.ERROR_MESSAGE);
 				} else if (X.getText().isEmpty() || Y.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "위치를 설정해주세요", "경고", JOptionPane.ERROR_MESSAGE);
 				} else {
-					JOptionPane.showMessageDialog(null, "정보", "등록이 완료되었습니다.", JOptionPane.INFORMATION_MESSAGE);
+					for (int i = 0; i < 3; i++) {
+						 Path sourcePath = imageList.get(i);
+						 int pos = fileList.get(i).lastIndexOf(".");
+						 String fileName = buildingName.getText() + (i + 1) + fileList.get(i).substring(pos);
+			             Path destinationPath = Paths.get("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + fileName);
+			             try {
+							Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+					DB.insertBuilding(buildingName.getText(), price.getText(), type, date, a_date, Integer.parseInt(X.getText()), Integer.parseInt(Y.getText()));
+					JOptionPane.showMessageDialog(null, "등록이 완료되었습니다.", "정보", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
@@ -228,16 +273,21 @@ public class AuctionRegist {
 		endButton.setBounds(404, 348, 121, 23);
 		frame.getContentPane().add(endButton);
 		
-		FileDialog file = new FileDialog(frame, "File Open", FileDialog.LOAD);
 		JPanel panel = new Square(0, 0);
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				file.setVisible(true);
-				ImageIcon image = new ImageIcon(file.getDirectory() + file.getFile());
-				JLabel label = new JLabel(Main.imageIconSetSize(image, 150, 130));
 				selectedPanel1 = true;
-				panel.add(label);
+
+				int result = fileDlg.showOpenDialog(null); //오픈
+				if(result == JFileChooser.APPROVE_OPTION) {
+					ImageIcon image = new ImageIcon(fileDlg.getSelectedFile().getPath());
+					File selectedFile = fileDlg.getSelectedFile();
+					imageList.add(selectedFile.toPath());
+					fileList.add(selectedFile.getName());
+					JLabel label = new JLabel(Main.imageIconSetSize(image, 150, 130));
+					panel.add(label);
+				}
 				panel.revalidate();
 				panel.repaint();
 			}
@@ -249,11 +299,18 @@ public class AuctionRegist {
 		panel_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				file.setVisible(true);
-				ImageIcon image = new ImageIcon(file.getDirectory() + file.getFile());
-				JLabel label = new JLabel(Main.imageIconSetSize(image, 150, 130));
 				selectedPanel2 = true;
-				panel_1.add(label);
+				
+				int result = fileDlg.showOpenDialog(null); //오픈
+				if(result == JFileChooser.APPROVE_OPTION) {
+					ImageIcon image = new ImageIcon(fileDlg.getSelectedFile().getPath());
+					File selectedFile = fileDlg.getSelectedFile();
+					imageList.add(selectedFile.toPath());
+					fileList.add(selectedFile.getName());
+					JLabel label = new JLabel(Main.imageIconSetSize(image, 150, 130));
+					panel_1.add(label);
+				}
+				
 				panel_1.revalidate();
 				panel_1.repaint();
 			}
@@ -265,12 +322,20 @@ public class AuctionRegist {
 		panel_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				file.setVisible(true);
-				ImageIcon image = new ImageIcon(file.getDirectory() + file.getFile());
-				JLabel label = new JLabel(Main.imageIconSetSize(image, 150, 130));
 				selectedPanel3 = true;
-				panel_2.add(label);
-				panel_2.revalidate();
+
+				int result = fileDlg.showOpenDialog(null); //오픈
+				if(result == JFileChooser.APPROVE_OPTION) {
+					ImageIcon image = new ImageIcon(fileDlg.getSelectedFile().getPath());
+					File selectedFile = fileDlg.getSelectedFile();
+					imageList.add(selectedFile.toPath());
+					fileList.add(selectedFile.getName());
+					JOptionPane.showMessageDialog(null, selectedFile.toPath(), "정보", JOptionPane.INFORMATION_MESSAGE);
+					JLabel label = new JLabel(Main.imageIconSetSize(image, 150, 130));
+					panel_2.add(label);
+				}
+				
+				panel_2.revalidate();	
 				panel_2.repaint();
 			}
 		});

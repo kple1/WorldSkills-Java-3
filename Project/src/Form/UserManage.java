@@ -121,6 +121,7 @@ public class UserManage {
 	public void tableRowAdd(DefaultTableModel model, JTable table, JScrollPane scrollPane, JTable table1, DefaultTableModel model1, JButton button) {
 		List<String> i_no = DB.getAllData("i_no", "interest");
 		if (comboBox.getSelectedItem().equals("건물 관심목록 내역")) {
+			i= 0 ;
 			textField.setVisible(true);
 			button.setVisible(true);
 			for (String list : i_no) {
@@ -143,6 +144,7 @@ public class UserManage {
 				scrollPane.setViewportView(table);
 			}
 		} else if (comboBox.getSelectedItem().equals("건물 매각 내역")) {
+			i = 0;
 			textField.setVisible(false);
 			button.setVisible(false);
 			List<String> s_no = DB.getAllData("s_no", "saleauction");

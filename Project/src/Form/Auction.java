@@ -6,12 +6,15 @@ import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import Data.DB;
+import Utils.AuctionShow;
 import Utils.ChangeLogo;
 import Utils.DayBox;
 
@@ -19,6 +22,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +30,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JScrollPane;
 
 public class Auction {
 
@@ -37,6 +42,7 @@ public class Auction {
 	public String setMonth = "";
 	public int intSetMonth = 0;
 	public JLabel nextButton;
+	public JPanel panel_1;
 
 	public JFrame getAuction() {
 		return frame;
@@ -62,7 +68,7 @@ public class Auction {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("경매일정");
-		frame.setBounds(100, 100, 635, 515);
+		frame.setBounds(100, 100, 635, 515); //635
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
@@ -78,6 +84,14 @@ public class Auction {
 		
 		new ChangeLogo(frame);
 
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(638, 81, 334, 348);
+		frame.getContentPane().add(scrollPane);
+		
+		panel_1 = new JPanel();
+		scrollPane.setViewportView(panel_1);
+		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
+		
 		JLabel monday = new JLabel("월");
 		monday.setHorizontalAlignment(SwingConstants.CENTER);
 		monday.setBounds(133, 56, 74, 15);
@@ -156,19 +170,20 @@ public class Auction {
 	}
 
 	String equalLabel = "";
-
+	int saveManyAuction = 0;
+	int totalAuction = 0;
 	public void createDay(JPanel panel, JFrame frame) {
 		int lengthOfMonth = YearMonth.of(getYear, getMonth).lengthOfMonth();
 		int beforeLengthOfMonth = YearMonth.of(getYear, getMonth - 1).lengthOfMonth();
-
+		
 		if ((int) Math.log10(getMonth) + 1 == 1) {
 			equalLabel = getYear + "-0" + getMonth;
-			setMonth = getYear + "-0" + getMonth + " (35)";
+			setMonth = getYear + "-0" + getMonth + " (" + totalAuction +")";
 			intSetMonth = getMonth;
 			resultDay = new JLabel(setMonth);
 		} else {
 			equalLabel = getYear + "-" + getMonth;
-			setMonth = getYear + "-" + getMonth + " (35)";
+			setMonth = getYear + "-" + getMonth + " (" + totalAuction +")";
 			intSetMonth = getMonth;
 			resultDay = new JLabel(setMonth);
 		}
@@ -176,15 +191,32 @@ public class Auction {
 		resultDay.setBounds(250, 25, 123, 29);
 		frame.getContentPane().add(resultDay);
 
-		panel.add(new DayBox(beforeLengthOfMonth, "", Color.LIGHT_GRAY));
+		panel.add(new DayBox(String.valueOf(beforeLengthOfMonth), "", Color.LIGHT_GRAY, intSetMonth, frame, panel_1));
 
-		for (int i = 1; i <= lengthOfMonth; i++) {
-			panel.add(new DayBox(i, "", Color.LIGHT_GRAY));
+		List<String> list = DB.getDate(intSetMonth);
+		List<String> array = DB.getDateCount(intSetMonth);
+		for (int i = 0; i < lengthOfMonth; i++) {
+			if (!list.get(i).substring(8, 10).equals(String.valueOf(i + 1))) {
+				list.add(i, "0");
+				array.add(i, "0");
+			}
+		}
+		
+		for (int i = 0; i < lengthOfMonth; i++) {
+			if (array.get(i).equals("0")) {
+				panel.add(new DayBox(String.valueOf(i + 1), "", Color.LIGHT_GRAY, intSetMonth, frame, panel_1));
+			} else {
+				if (saveManyAuction == i + 1) {
+					panel.add(new DayBox("<html><font color = 'blue'>" + (i + 1) + "개</font><html/>", array.get(i), Color.CYAN, intSetMonth, frame, panel_1));
+				} else {
+					panel.add(new DayBox(String.valueOf(i + 1), array.get(i) + "개", Color.CYAN, intSetMonth, frame, panel_1));
+				}
+			}
 		}
 
 		int allColumns = 42 - lengthOfMonth;
 		for (int j = 1; j < allColumns; j++) {
-			panel.add(new DayBox(j, "", Color.LIGHT_GRAY));
+			panel.add(new DayBox(String.valueOf(j), "", Color.LIGHT_GRAY, intSetMonth, frame, panel_1));
 		}
 	}
 

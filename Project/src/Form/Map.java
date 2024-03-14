@@ -68,7 +68,6 @@ public class Map {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-            	frame.dispose();
             	Main main = new Main();
             	main.getMain().setVisible(true);
             }

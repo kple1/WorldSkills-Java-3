@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,30 @@ public class DB {
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static List<String> getDate(int i) {
+		List<String> list = new ArrayList<>();
+		String q = "SELECT b_date, COUNT(*) FROM auction.building where b_date LIKE '2024-0" + i + "%' GROUP BY b_date ORDER BY b_date, COUNT(b_no) DESC";
+		try {
+			ResultSet rs = st.executeQuery(q);
+			while(rs.next()) list.add(rs.getString("b_date"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public static List<String> getDateCount(int i) {
+		List<String> list = new ArrayList<>();
+		String q = "SELECT b_date, COUNT(*) FROM auction.building where b_date LIKE '2024-0" + i + "%' GROUP BY b_date ORDER BY b_date, COUNT(b_no) DESC";
+		try {
+			ResultSet rs = st.executeQuery(q);
+			while(rs.next()) list.add(rs.getString("COUNT(*)"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 	
 	public static void delete(String table, String haveColumn, String where) {
@@ -130,6 +156,25 @@ public class DB {
 		}
 		return save;
 	}
+	
+	public static void insertBuilding(String b_name, String b_price, int b_type, String b_date, int a_no, int b_x, int b_y) {
+		try {
+			st.executeUpdate("USE auction");
+			String sql = "INSERT INTO building (b_name, b_price, b_type, b_date, a_no, b_x, b_y, b_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement pstm = connection.prepareStatement(sql);
+			pstm.setString(1, b_name);
+			pstm.setString(2, b_price);
+			pstm.setInt(3, b_type);
+			pstm.setString(4, b_date);
+			pstm.setInt(5, a_no);
+			pstm.setInt(6, b_x);
+			pstm.setInt(7, b_y);
+			pstm.setInt(8, 0);
+			pstm.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static String getData(String wantColumn, String getColumn, String where, String table) {
 		String save = "";
@@ -228,11 +273,28 @@ public class DB {
 		}
 	}
 
-
-	public static void main(String[] args) {
-		System.out.println(getDayAuctionCount());
-		for (String list: getDayAuction()) {
-			System.out.println(list);
+	public static String countInterestBuilding(String where) {
+		String save = "";
+		try {
+			ResultSet rs = st.executeQuery("SELECT COUNT(i_no) FROM interest WHERE b_name = " + where);
+			if (rs.next()) save = rs.getString(1); 
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		return save;
+	}
+	
+	public static void main(String[] args) {
+		int getYear = LocalDateTime.now().getYear();
+		int getMonth = LocalDateTime.now().getMonthValue();
+		int lengthOfMonth = YearMonth.of(getYear, getMonth).lengthOfMonth();
+		
+		List<String> list = DB.getDate(getMonth);
+		for (int i = 0; i < lengthOfMonth; i++) {
+			if (!list.get(i).substring(8, 10).equals(String.valueOf(i + 1))) {
+				list.add(i, "0");
+			}
+		}
+		System.out.print(list.size());
 	}
 }
