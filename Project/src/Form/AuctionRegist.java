@@ -238,6 +238,9 @@ public class AuctionRegist {
 		List<String> fileList = new ArrayList<>();
 		JFileChooser fileDlg = new JFileChooser();
 		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG Images", "jpg");
+	    fileDlg.setFileFilter(filter);
+		
 		endButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				long getLP = (int) Math.log10(Long.parseLong(price.getText())) + 1;
@@ -326,11 +329,10 @@ public class AuctionRegist {
 
 				int result = fileDlg.showOpenDialog(null); //오픈
 				if(result == JFileChooser.APPROVE_OPTION) {
-					ImageIcon image = new ImageIcon(fileDlg.getSelectedFile().getPath());
+					ImageIcon image = new ImageIcon(fileDlg.getSelectedFile().getPath());	    
 					File selectedFile = fileDlg.getSelectedFile();
 					imageList.add(selectedFile.toPath());
 					fileList.add(selectedFile.getName());
-					JOptionPane.showMessageDialog(null, selectedFile.toPath(), "정보", JOptionPane.INFORMATION_MESSAGE);
 					JLabel label = new JLabel(Main.imageIconSetSize(image, 150, 130));
 					panel_2.add(label);
 				}

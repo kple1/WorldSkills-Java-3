@@ -15,15 +15,38 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.List;
 
 public class DayBox extends JPanel {
 
+	JLabel topLabel = new JLabel("", SwingConstants.RIGHT);
+	
 	public DayBox(String day, String resultAuction, Color color, int month, JFrame frame, JPanel panel) {
 		setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		setLayout(new BorderLayout());
 
-		JLabel topLabel = new JLabel(day, SwingConstants.RIGHT);
+		String setMonth = "";
+		if ((int) Math.log10(month) + 1 == 1) {
+			setMonth = "0" + month;
+		}
+
+		List<String> getNo = DB.getManyData("b_no", "building", "b_date", "2024-" + setMonth + "-" + day);
+		
+		StringBuilder sb = new StringBuilder();
+		for (String loop: getNo) {
+			String b_name = DB.getData("b_name", "b_no", loop, "building");
+			sb.append(b_name + "<br>");
+		}
+		
+		List<String> array = DB.getDateCount(month);
+		String[] ra = resultAuction.split("개");
+		if (Collections.max(array).equals(ra[0])) {
+			topLabel.setText("<html><font color = 'blue'>" + day + "</font><html/>");
+		} else {
+			topLabel.setText(day);
+		}
+		topLabel.setToolTipText("<html>" + String.valueOf(sb) + "<html/>");
 		topLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -36,12 +59,16 @@ public class DayBox extends JPanel {
 
 				int lengthOfMonth = YearMonth.of(getYear, month).lengthOfMonth();
 				for (int i = 0; i < lengthOfMonth; i++) {
-					if (!list.get(i).substring(8, 10).equals(String.valueOf(i + 1))) {
+					if (i >= list.size()) {
 						list.add(i, "0");
 						array.add(i, "0");
+					} else {
+						if (Integer.parseInt(list.get(i).substring(8, 10)) != (i + 1)) {
+							list.add(i, "0");
+							array.add(i, "0");
+						}
 					}
 				}
-			
 
 				if (month <= getMonth && Integer.parseInt(day) < getDay) {
 					JOptionPane.showMessageDialog(null, "이전 날짜는 선택이 불가합니다.", "경고", JOptionPane.ERROR_MESSAGE);
@@ -53,11 +80,6 @@ public class DayBox extends JPanel {
 					
 					panel.removeAll();
 					
-					String setMonth = "";
-					if ((int) Math.log10(month) + 1 == 1) {
-						setMonth = "0" + month;
-					}
-					List<String> getNo = DB.getManyData("b_no", "building", "b_date", "2024-" + setMonth + "-" + day);
 					for (String loop: getNo) {
 						String b_name = DB.getData("b_name", "b_no", loop, "building");
 						String b_price = DB.getData("b_price", "b_no", loop, "building");
@@ -71,9 +93,11 @@ public class DayBox extends JPanel {
 						} else {
 							buildingType = "오피스텔";
 						}
+						
 						String a_no = DB.getData("a_no", "b_no", loop, "building");
 						String ar_name = DB.getData("ar_name", "ar_no", a_no, "area");
 						String interestCount = DB.getInterestPeoples(loop);
+	
 						panel.add(new AuctionShow(b_name, b_price, buildingType, ar_name, interestCount, frame));
 					}
 				}

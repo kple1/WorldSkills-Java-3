@@ -218,11 +218,11 @@ public class Auction {
 			if (array.get(i).equals("0")) {
 				panel.add(new DayBox(String.valueOf(i + 1), "", Color.LIGHT_GRAY, getMonth, frame, panel_1));
 			} else {
-				if (Integer.parseInt(array.get(i)) == saveManyAuction) {
-					panel.add(new DayBox("<html><font color = 'blue'>" + String.valueOf(i + 1) + "</font><html/>", array.get(i) + "개", Color.CYAN, getMonth, frame, panel_1));
-				} else {
+				//if (Integer.parseInt(array.get(i)) == saveManyAuction) {
+					//panel.add(new DayBox("<html><font color = 'blue'>" + String.valueOf(i + 1) + "</font><html/>", array.get(i) + "개", Color.CYAN, getMonth, frame, panel_1));
+				//} else {
 					panel.add(new DayBox(String.valueOf(i + 1), array.get(i) + "개", Color.CYAN, getMonth, frame, panel_1));
-				}
+				//}
 			}
 		}
 
