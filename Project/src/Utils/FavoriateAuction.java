@@ -25,7 +25,7 @@ public class FavoriateAuction extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				frame.dispose();
 				
-				HugeMap hugeMap = new HugeMap(x, y);
+				HugeMap hugeMap = new HugeMap(x, y, "Main");
 				hugeMap.getHegeMap().setVisible(true);
 	        	
 				BuildingInfo bi = new BuildingInfo(

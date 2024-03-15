@@ -183,7 +183,7 @@ public class Map {
 					rc.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent e) {
-							HugeMap hugeMap = new HugeMap(b_x, b_y);
+							HugeMap hugeMap = new HugeMap(b_x, b_y, "Map");
 							hugeMap.getHegeMap().setVisible(true);
 							frame.setVisible(false);
 							

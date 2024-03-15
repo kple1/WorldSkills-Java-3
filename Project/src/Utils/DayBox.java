@@ -31,10 +31,10 @@ public class DayBox extends JPanel {
 				int getMonth = LocalDateTime.now().getMonthValue();
 				int getYear = LocalDateTime.now().getYear();
 
-				List<String> list = DB.getDate(getMonth);
-				List<String> array = DB.getDateCount(getMonth);
+				List<String> list = DB.getDate(month);
+				List<String> array = DB.getDateCount(month);
 
-				int lengthOfMonth = YearMonth.of(getYear, getMonth).lengthOfMonth();
+				int lengthOfMonth = YearMonth.of(getYear, month).lengthOfMonth();
 				for (int i = 0; i < lengthOfMonth; i++) {
 					if (!list.get(i).substring(8, 10).equals(String.valueOf(i + 1))) {
 						list.add(i, "0");
@@ -50,14 +50,31 @@ public class DayBox extends JPanel {
 				} else {
 					frame.setBounds(0, 0, 1000, 515);
 					frame.setLocationRelativeTo(null);
-					int changeResult = Integer.parseInt(resultAuction.substring(0, 1));
-					for (int i = 0; i < changeResult; i++) {
-//						String b_name = DB.getData("b_name", "b_date", day, "building");
-//						String b_price = DB.getData("b_price", "b_date", day, "building");
-//						String b_tpye = DB.getData("b_type", "b_date", day, "building");
-//						String ar_name = DB.getData("ar_name", "b_date", day, "building");
-//						String getInterest = DB.countInterestBuilding(b_name);
-						panel.add(new AuctionShow("", "", "", "", ""));
+					
+					panel.removeAll();
+					
+					String setMonth = "";
+					if ((int) Math.log10(month) + 1 == 1) {
+						setMonth = "0" + month;
+					}
+					List<String> getNo = DB.getManyData("b_no", "building", "b_date", "2024-" + setMonth + "-" + day);
+					for (String loop: getNo) {
+						String b_name = DB.getData("b_name", "b_no", loop, "building");
+						String b_price = DB.getData("b_price", "b_no", loop, "building");
+						int b_type = DB.getIntData("b_type", "building", "b_no", loop);
+						
+						String buildingType = "";
+						if (b_type == 0) {
+							buildingType = "아파트";
+						} else if (b_type == 1) {
+							buildingType = "주택";
+						} else {
+							buildingType = "오피스텔";
+						}
+						String a_no = DB.getData("a_no", "b_no", loop, "building");
+						String ar_name = DB.getData("ar_name", "ar_no", a_no, "area");
+						String interestCount = DB.getInterestPeoples(loop);
+						panel.add(new AuctionShow(b_name, b_price, buildingType, ar_name, interestCount, frame));
 					}
 				}
 			}

@@ -159,7 +159,7 @@ public class myHome {
 					int y = DB.getIntData("b_y", "building", "b_name", String.valueOf(recentList.getValueAt(selectRow, 2)));
 
 					frame.dispose();
-					HugeMap hugeMap = new HugeMap(x, y);
+					HugeMap hugeMap = new HugeMap(x, y, "myHome");
 					hugeMap.getHegeMap().setVisible(true);
 				}
 			}

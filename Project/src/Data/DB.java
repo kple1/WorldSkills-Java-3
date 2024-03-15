@@ -193,6 +193,7 @@ public class DB {
 	public static List<String> getManyData(String wantColumn, String tableName, String haveColumn, String where) {
 		List<String> list = new ArrayList<String>();
 		try {
+			st.executeUpdate("USE auction");
 			String q = "SELECT " + wantColumn + " FROM " + tableName + " WHERE " + haveColumn + " = '" + where + "'";
 			ResultSet rs = st.executeQuery(q);
 			while (rs.next())
@@ -285,16 +286,7 @@ public class DB {
 	}
 	
 	public static void main(String[] args) {
-		int getYear = LocalDateTime.now().getYear();
-		int getMonth = LocalDateTime.now().getMonthValue();
-		int lengthOfMonth = YearMonth.of(getYear, getMonth).lengthOfMonth();
-		
-		List<String> list = DB.getDate(getMonth);
-		for (int i = 0; i < lengthOfMonth; i++) {
-			if (!list.get(i).substring(8, 10).equals(String.valueOf(i + 1))) {
-				list.add(i, "0");
-			}
-		}
-		System.out.print(list.size());
+		List<String> list = DB.getDate(4);
+		System.out.println(list);
 	}
 }

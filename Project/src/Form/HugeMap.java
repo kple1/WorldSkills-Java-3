@@ -24,7 +24,7 @@ public class HugeMap {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					HugeMap window = new HugeMap(0, 0);
+					HugeMap window = new HugeMap(0, 0, "");
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,10 +35,11 @@ public class HugeMap {
 
 	int x;
 	int y;
-	
-	public HugeMap(int x, int y) {
+	String formName;
+	public HugeMap(int x, int y, String formName) {
 		this.x = x;
 		this.y = y;
+		this.formName = formName;
 		initialize(); //초기화 시킨 후 마지막에 initialize (실수로 2시간 날림)
 	}
 	
@@ -54,8 +55,27 @@ public class HugeMap {
             @Override
             public void windowClosing(WindowEvent e) {
             	frame.dispose();
-            	Main main = new Main();
-            	main.getMain().setVisible(true);
+            	if (formName.equals("Auction")) {
+            		frame.dispose();
+            		Auction auction = new Auction();
+            		auction.getAuction().setVisible(true);
+            	} else if (formName.equals("myHome")) {
+            		frame.dispose();
+            		myHome mh = new myHome();
+            		mh.getMyHome().setVisible(true);
+            	} else if (formName.equals("Map")) {
+            		Map map = new Map();
+            		map.getMap().setVisible(true);
+            		frame.dispose();
+            	} else if (formName.equals("Search")) {
+            		Search s = new Search();
+            		s.getSearch().setVisible(true);
+            		frame.dispose();
+            	} else {
+            		Main main = new Main();
+            		main.getMain().setVisible(true);
+            		frame.dispose();
+            	}
             }
         });
 		frame.getContentPane().setLayout(null);

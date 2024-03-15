@@ -248,9 +248,4 @@ public class Main {
 		ImageIcon image = new ImageIcon(yimage);
 		return image;
 	}
-	
-	public static JPanel createAcutionPanel() {
-		JPanel panel = new JPanel();
-		return panel;
-	}
 }

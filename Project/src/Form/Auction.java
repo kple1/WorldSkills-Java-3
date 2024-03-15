@@ -68,7 +68,7 @@ public class Auction {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("경매일정");
-		frame.setBounds(100, 100, 635, 515); //635
+		frame.setBounds(100, 100, 635, 515); // 635
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setLocationRelativeTo(null);
@@ -81,17 +81,17 @@ public class Auction {
 				main.getMain().setVisible(true);
 			}
 		});
-		
+
 		new ChangeLogo(frame);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(638, 81, 334, 348);
 		frame.getContentPane().add(scrollPane);
-		
+
 		panel_1 = new JPanel();
 		scrollPane.setViewportView(panel_1);
 		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		JLabel monday = new JLabel("월");
 		monday.setHorizontalAlignment(SwingConstants.CENTER);
 		monday.setBounds(133, 56, 74, 15);
@@ -142,6 +142,8 @@ public class Auction {
 				if (getMinDate.equals(equalLabel)) {
 					beforeButton.setEnabled(false);
 				} else {
+					frame.setBounds(100, 100, 635, 515); // 635
+					frame.setLocationRelativeTo(null);
 					nextButton.setEnabled(true);
 					getMonth -= 1;
 					reset(panel, frame);
@@ -159,6 +161,8 @@ public class Auction {
 				if (getYearAndMonth.equals(equalLabel)) {
 					nextButton.setEnabled(false);
 				} else {
+					frame.setBounds(100, 100, 635, 515); // 635
+					frame.setLocationRelativeTo(null);
 					beforeButton.setEnabled(true);
 					getMonth += 1;
 					reset(panel, frame);
@@ -170,53 +174,61 @@ public class Auction {
 	}
 
 	String equalLabel = "";
-	int saveManyAuction = 0;
-	int totalAuction = 0;
+
 	public void createDay(JPanel panel, JFrame frame) {
 		int lengthOfMonth = YearMonth.of(getYear, getMonth).lengthOfMonth();
 		int beforeLengthOfMonth = YearMonth.of(getYear, getMonth - 1).lengthOfMonth();
-		
+
+		List<String> list = DB.getDate(getMonth);
+		List<String> array = DB.getDateCount(getMonth);
+
+		int totalAuction = 0;	
+		int saveManyAuction = 0;
+		for (int i = 0; i < lengthOfMonth; i++) {
+			if (i >= list.size()) {
+				list.add(i, "0");
+				array.add(i, "0");
+			} else {
+				if (Integer.parseInt(list.get(i).substring(8, 10)) != (i + 1)) {
+					list.add(i, "0");
+					array.add(i, "0");
+				}
+			}
+			if (saveManyAuction < Integer.parseInt(array.get(i))) {
+				saveManyAuction = Integer.parseInt(array.get(i));
+			}
+			totalAuction += Integer.parseInt(array.get(i));
+		}
+
 		if ((int) Math.log10(getMonth) + 1 == 1) {
 			equalLabel = getYear + "-0" + getMonth;
-			setMonth = getYear + "-0" + getMonth + " (" + totalAuction +")";
-			intSetMonth = getMonth;
+			setMonth = getYear + "-0" + getMonth + " (" + totalAuction + ")";
 			resultDay = new JLabel(setMonth);
 		} else {
 			equalLabel = getYear + "-" + getMonth;
-			setMonth = getYear + "-" + getMonth + " (" + totalAuction +")";
-			intSetMonth = getMonth;
 			resultDay = new JLabel(setMonth);
 		}
 		resultDay.setFont(new Font("굴림", Font.PLAIN, 20));
 		resultDay.setBounds(250, 25, 123, 29);
 		frame.getContentPane().add(resultDay);
 
-		panel.add(new DayBox(String.valueOf(beforeLengthOfMonth), "", Color.LIGHT_GRAY, intSetMonth, frame, panel_1));
+		panel.add(new DayBox(String.valueOf(beforeLengthOfMonth), "", Color.LIGHT_GRAY, getMonth, frame, panel_1));
 
-		List<String> list = DB.getDate(intSetMonth);
-		List<String> array = DB.getDateCount(intSetMonth);
-		for (int i = 0; i < lengthOfMonth; i++) {
-			if (!list.get(i).substring(8, 10).equals(String.valueOf(i + 1))) {
-				list.add(i, "0");
-				array.add(i, "0");
-			}
-		}
-		
 		for (int i = 0; i < lengthOfMonth; i++) {
 			if (array.get(i).equals("0")) {
-				panel.add(new DayBox(String.valueOf(i + 1), "", Color.LIGHT_GRAY, intSetMonth, frame, panel_1));
+				panel.add(new DayBox(String.valueOf(i + 1), "", Color.LIGHT_GRAY, getMonth, frame, panel_1));
 			} else {
-				if (saveManyAuction == i + 1) {
-					panel.add(new DayBox("<html><font color = 'blue'>" + (i + 1) + "개</font><html/>", array.get(i), Color.CYAN, intSetMonth, frame, panel_1));
+				if (Integer.parseInt(array.get(i)) == saveManyAuction) {
+					panel.add(new DayBox("<html><font color = 'blue'>" + String.valueOf(i + 1) + "</font><html/>", array.get(i) + "개", Color.CYAN, getMonth, frame, panel_1));
 				} else {
-					panel.add(new DayBox(String.valueOf(i + 1), array.get(i) + "개", Color.CYAN, intSetMonth, frame, panel_1));
+					panel.add(new DayBox(String.valueOf(i + 1), array.get(i) + "개", Color.CYAN, getMonth, frame, panel_1));
 				}
 			}
 		}
 
 		int allColumns = 42 - lengthOfMonth;
 		for (int j = 1; j < allColumns; j++) {
-			panel.add(new DayBox(String.valueOf(j), "", Color.LIGHT_GRAY, intSetMonth, frame, panel_1));
+			panel.add(new DayBox(String.valueOf(j), "", Color.LIGHT_GRAY, getMonth, frame, panel_1));
 		}
 	}
 

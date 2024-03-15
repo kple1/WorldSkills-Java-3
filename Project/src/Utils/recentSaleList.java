@@ -39,7 +39,7 @@ public class recentSaleList extends JPanel {
 				int getX = DB.getIntData("b_x", "building", "b_name", getName);
 				int getY = DB.getIntData("b_y", "building", "b_name", getName);
 				frame.dispose();
-				HugeMap hugeMap = new HugeMap(getX, getY);
+				HugeMap hugeMap = new HugeMap(getX, getY, "Main");
 				hugeMap.getHegeMap().setVisible(true);
 				
 				String b_price = DB.getData("b_price", "b_no", getNo, "building");

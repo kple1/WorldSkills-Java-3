@@ -67,7 +67,7 @@ public class SearchFormPlugin extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				int b_x = DB.getIntData("b_x", "building", "b_name", buildingName);
 				int b_y = DB.getIntData("b_y", "building", "b_name", buildingName);
-				HugeMap hm = new HugeMap(b_x, b_y);
+				HugeMap hm = new HugeMap(b_x, b_y, "Search");
 				hm.getHegeMap().setVisible(true);
 				
 				String no = DB.getData("b_no", "b_name", buildingName, "building");

@@ -181,7 +181,7 @@ public class BuildingInfo {
 					buildingType = "오피스텔";
 				}
 				
-				HugeMap hm = new HugeMap(0, 0);
+				HugeMap hm = new HugeMap(0, 0, "Main");
 				hm.getHegeMap().setVisible(false);
 				
 				for(Window window : Window.getWindows()) {

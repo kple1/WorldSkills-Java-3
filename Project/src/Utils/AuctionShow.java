@@ -3,10 +3,12 @@ package Utils;
 import javax.swing.JPanel;
 
 import Data.DB;
+import Form.HugeMap;
 import Form.Main;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.SystemColor;
@@ -22,12 +24,14 @@ public class AuctionShow extends JPanel {
 	String b_type;
 	String ar_name;
 	String interestCount;
-	public AuctionShow(String b_name, String b_price, String b_type, String ar_name, String interestCount) {
+	JFrame frame;
+	public AuctionShow(String b_name, String b_price, String b_type, String ar_name, String interestCount, JFrame frame) {
 		this.b_name = b_name;
 		this.b_price = b_price;
 		this.b_type = b_type;
 		this.ar_name = ar_name;
 		this.interestCount = interestCount;
+		this.frame = frame;
 		initialize();
 	}
 
@@ -52,7 +56,11 @@ public class AuctionShow extends JPanel {
 		location.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				frame.dispose();
+				int x = DB.getIntData("b_x", "building", "b_name", b_name);
+				int y = DB.getIntData("b_y", "building", "b_name", b_name);
+				HugeMap map = new HugeMap(x, y, "Auction");
+				map.getHegeMap().setVisible(true);
 			}
 		});
 		location.setForeground(SystemColor.activeCaption);
