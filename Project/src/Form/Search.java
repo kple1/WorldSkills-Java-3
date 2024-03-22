@@ -123,7 +123,7 @@ public class Search {
 				}
 			}
 		});
-		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\image\\검색.png");
+		ImageIcon icon = new ImageIcon("datafiles\\image\\검색.png");
 		searchButton.setIcon(Main.imageIconSetSize(icon, 29, 29));
 		searchButton.setBounds(615, 8, 29, 29);
 

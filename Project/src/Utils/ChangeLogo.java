@@ -15,9 +15,9 @@ public class ChangeLogo {
 	
 	public ChangeLogo(JFrame frame) {
 		icon1 = new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\icon\\icon1.png"));
+				Toolkit.getDefaultToolkit().getImage("datafiles\\icon\\icon1.png"));
 		icon2 = new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\icon\\icon2.png"));
+				Toolkit.getDefaultToolkit().getImage("datafiles\\icon\\icon2.png"));
 
 		frame.setIconImage(icon1.getImage());
 

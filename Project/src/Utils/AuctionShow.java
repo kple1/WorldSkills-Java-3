@@ -42,7 +42,7 @@ public class AuctionShow extends JPanel {
 		
 		JPanel panel_1 = new JPanel();
 		
-		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + b_name + "1.jpg");
+		ImageIcon icon = new ImageIcon("datafiles\\building\\" + b_name + "1.jpg");
 		JLabel label = new JLabel(Main.imageIconSetSize(icon, 91, 91));
 		panel_1.add(label);
 		

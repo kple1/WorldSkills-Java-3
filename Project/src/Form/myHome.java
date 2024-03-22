@@ -144,7 +144,7 @@ public class myHome {
 			} else {
 				buildingType = "오피스텔";
 			}
-			ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + b_name + "1.jpg");
+			ImageIcon icon = new ImageIcon("datafiles\\building\\" + b_name + "1.jpg");
 			model2.addRow(new Object[] { ++count2, Main.imageIconSetSize(icon, 50, 50), b_name, buildingType, a_date });
 		}
 

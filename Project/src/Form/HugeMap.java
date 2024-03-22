@@ -90,7 +90,7 @@ public class HugeMap {
 		rc.setOpaque(false);
 		layeredPane.add(rc);
 		
-		ImageIcon image = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\map\\전체.jpg");
+		ImageIcon image = new ImageIcon("datafiles\\map\\전체.jpg");
 		JLabel map = new JLabel(Main.imageIconSetSize(image, 900, 1000));
 		map.setBounds(0, 0, 900, 1000);
 		layeredPane.add(map);

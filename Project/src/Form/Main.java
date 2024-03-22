@@ -78,7 +78,7 @@ public class Main {
 				s.getSearch().setVisible(true);
 			}
 		});
-		ImageIcon imgIcon1 = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\image\\검색.png");
+		ImageIcon imgIcon1 = new ImageIcon("datafiles\\image\\검색.png");
 		searchButton.setIcon(imageIconSetSize(imgIcon1, 40, 40));
 		searchButton.setBounds(631, 10, 40, 40);
 		frame.getContentPane().add(searchButton);
@@ -92,7 +92,7 @@ public class Main {
 				mh.getMyHome().setVisible(true);
 			}
 		});
-		ImageIcon imgIcon2 = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\image\\마이홈.png");
+		ImageIcon imgIcon2 = new ImageIcon("datafiles\\image\\마이홈.png");
 		myHomeButton.setIcon(imageIconSetSize(imgIcon2, 40, 40));
 		myHomeButton.setBounds(683, 10, 40, 40);
 		frame.getContentPane().add(myHomeButton);
@@ -106,7 +106,7 @@ public class Main {
 				a.getAuction().setVisible(true);
 			}
 		});
-		ImageIcon imgIcon3 = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\image\\경매일정.png");
+		ImageIcon imgIcon3 = new ImageIcon("datafiles\\image\\경매일정.png");
 		auctionButton.setIcon(imageIconSetSize(imgIcon3, 40, 40));
 		auctionButton.setBounds(747, 10, 40, 40);
 		frame.getContentPane().add(auctionButton);
@@ -147,7 +147,7 @@ public class Main {
 		panel.setBounds(0, 0, 800, 78);
 		frame.getContentPane().add(panel);
 
-		JPanel mapPanel = new Art("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\map\\전체.jpg");
+		JPanel mapPanel = new Art("datafiles\\map\\전체.jpg");
 		mapPanel.setBounds(10, 88, 385, 442);
 		frame.getContentPane().add(mapPanel);
 		JButton viewMap = new JButton("지도 보기");
@@ -232,7 +232,7 @@ public class Main {
         		sb.append(String.valueOf(resultPrice).substring(0, 4) + "만원");
         	}
         	
-        	ImageIcon icon1 = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + b_name + "1.jpg");
+        	ImageIcon icon1 = new ImageIcon("datafiles\\building\\" + b_name + "1.jpg");
         	panel_2.add(new FavoriateAuction(imageIconSetSize(icon1, 150, 80),
         			"<html><font size = '+1'>" + sb + "</font>"
         			+ "<br><font color='blue'>감정가 " + gamJeongGa + "%</font>"

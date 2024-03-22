@@ -52,7 +52,7 @@ public class Admin {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setIconImage(
-				Toolkit.getDefaultToolkit().getImage("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\icon\\icon1.png"));
+				Toolkit.getDefaultToolkit().getImage("datafiles\\icon\\icon1.png"));
 		frame.setTitle("관리자");
 		frame.setBounds(100, 100, 280, 220);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

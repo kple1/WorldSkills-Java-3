@@ -31,7 +31,7 @@ public class recentSaleList extends JPanel {
 		
 		String getName = DB.getData("b_name", "b_price", b_price, "building");
 		String getNo = DB.getData("b_no", "b_name", getName, "building");
-		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + getName + "1.jpg");
+		ImageIcon icon = new ImageIcon("datafiles\\building\\" + getName + "1.jpg");
 		JLabel label = new JLabel(Main.imageIconSetSize(icon, 149, 105));
 		label.addMouseListener(new MouseAdapter() {
 			@Override

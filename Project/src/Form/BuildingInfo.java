@@ -239,7 +239,7 @@ public class BuildingInfo {
 		imagePanel.setBounds(12, 10, 239, 274);
 		frame.getContentPane().add(imagePanel);
 
-		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + BuildingInfo.buildingName + count + ".jpg");
+		ImageIcon icon = new ImageIcon("datafiles\\building\\" + BuildingInfo.buildingName + count + ".jpg");
 		JLabel label = new JLabel(icon);
 		
 		JLabel leftButton = new JLabel("<");
@@ -252,7 +252,7 @@ public class BuildingInfo {
 				} else {
 					count -= 1;
 				}
-				ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\building\\" + BuildingInfo.buildingName + count + ".jpg");
+				ImageIcon icon = new ImageIcon("datafiles\\building\\" + BuildingInfo.buildingName + count + ".jpg");
 				label.setIcon(Main.imageIconSetSize(icon, 239, 274));
 				imagePanel.revalidate();
 				imagePanel.repaint();

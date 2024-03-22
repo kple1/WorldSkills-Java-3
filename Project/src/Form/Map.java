@@ -151,7 +151,7 @@ public class Map {
 		layeredPane.setPreferredSize(new Dimension(900, 1000)); // 패널 크기 설정 필수
 
 		scrollPane_1.setViewportView(layeredPane);
-		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\map\\전체.jpg");
+		ImageIcon icon = new ImageIcon("datafiles\\map\\전체.jpg");
 		JLabel label1 = new JLabel(Main.imageIconSetSize(icon, 900, 1000));
 		label1.setBounds(0, 0, 900, 1000);
 

@@ -65,7 +65,7 @@ public class SelectHugeMap {
 			}
 		});
 		panel.setBounds(0, 0, 900, 1000);
-		ImageIcon icon = new ImageIcon("C:\\Users\\User\\Desktop\\과제3 결과물\\datafiles\\map\\전체.jpg");
+		ImageIcon icon = new ImageIcon("datafiles\\map\\전체.jpg");
 		JLabel label = new JLabel(Main.imageIconSetSize(icon, 900, 1000));
 		panel.add(label);
 		frame.getContentPane().add(panel);
